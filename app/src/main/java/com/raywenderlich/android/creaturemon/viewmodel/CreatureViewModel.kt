@@ -4,8 +4,10 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import com.raywenderlich.android.creaturemon.model.*
+import com.raywenderlich.android.creaturemon.model.room.RoomRepository
 
-class CreatureViewModel(private val generator: CreatureGenerator = CreatureGenerator()) : ViewModel() {
+class CreatureViewModel(private val generator: CreatureGenerator = CreatureGenerator(),
+                        private val repository: CreatureRepository = RoomRepository()) : ViewModel() {
 
     private val creatureLiveData = MutableLiveData<Creature>()
 
@@ -39,4 +41,16 @@ class CreatureViewModel(private val generator: CreatureGenerator = CreatureGener
         this.drawable = drawable
         updateCreature()
     }
+
+    fun saveCreature(): Boolean {
+        return if(canSaveCreature()){
+            repository.saveCreature(creature)
+            true
+        }else{
+            false
+        }
+    }
+
+    fun canSaveCreature() = intelligence != 0 && strength != 0 && endurance != 0
+            && name.isNotEmpty() && drawable != 0
 }
