@@ -44,6 +44,7 @@ class CreatureViewModel(private val generator: CreatureGenerator = CreatureGener
 
     fun saveCreature(): Boolean {
         return if(canSaveCreature()){
+            updateCreature()
             repository.saveCreature(creature)
             true
         }else{
